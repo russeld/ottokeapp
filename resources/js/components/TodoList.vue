@@ -1,7 +1,7 @@
 <template>
   <b-row>
     <b-col sm="12" class="mb-5">
-      <b-card header-bg-variant="success">
+      <b-card header-bg-variant="success" v-if="doing.length">
         <template v-slot:header>
           <h4 class="mb-0 text-white">Backlog</h4>
         </template>
@@ -17,14 +17,15 @@
           </TodoItem>
         </b-list-group>
       </b-card>
+        <p v-if="!doing.length" class="display-5 text-muted text-center m-3">Congrats you have no backlog!</p>
     </b-col>
 
     <b-col sm="12" class="mb-5">
-      <b-card header-bg-variant="secondary">
+      <b-card header-bg-variant="secondary" v-if="completed.length">
         <template v-slot:header>
           <h4 class="mb-0 text-white">Completed</h4>
         </template>
-        <b-list-group class="list-group-flush">
+        <b-list-group class="list-group-flush" v-if="completed.length">
           <TodoItem
             v-for="(todo, index) in completed"
             :displayAgo="displayAgo"
