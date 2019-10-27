@@ -1,24 +1,48 @@
 <template>
   <b-row>
-    <b-col sm="12">
-      <b-list-group>
-        <TodoItem
-          v-for="(todo, index) in todos"
-          :displayAgo="displayAgo"
-          :todoIsDone="todoIsDone"
-          :deleteTodo="deleteTodo"
-          :key="todo.id"
-          :todo="todo"
-          :index="index">
-        </TodoItem>
-      </b-list-group>
+    <b-col sm="12" class="mb-5">
+      <b-card header-bg-variant="success">
+        <template v-slot:header>
+          <h4 class="mb-0 text-white">Backlog</h4>
+        </template>
+        <b-list-group class="list-group-flush">
+          <TodoItem
+            v-for="(todo, index) in doing"
+            :displayAgo="displayAgo"
+            :todoIsDone="todoIsDone"
+            :deleteTodo="deleteTodo"
+            :key="todo.id"
+            :todo="todo"
+            :index="index">
+          </TodoItem>
+        </b-list-group>
+      </b-card>
+    </b-col>
+
+    <b-col sm="12" class="mb-5">
+      <b-card header-bg-variant="secondary">
+        <template v-slot:header>
+          <h4 class="mb-0 text-white">Completed</h4>
+        </template>
+        <b-list-group class="list-group-flush">
+          <TodoItem
+            v-for="(todo, index) in completed"
+            :displayAgo="displayAgo"
+            :todoIsDone="todoIsDone"
+            :deleteTodo="deleteTodo"
+            :key="todo.id"
+            :todo="todo"
+            :index="index">
+          </TodoItem>
+        </b-list-group>
+      </b-card>
     </b-col>
   </b-row>
 </template>
 
 <script>
 import moment from 'moment'
-import { mapState, mapActions } from 'vuex'
+import { mapState, mapActions, mapGetters } from 'vuex'
 
 import TodoItem from "./TodoItem"
 
@@ -34,11 +58,18 @@ export default {
   },
   computed: {
     ...mapState({
-      todos: state => state.todos.all
-    })
+      todos: state => state.todos.all,
+    }),
+    ...mapGetters('todos', ['doing', 'completed'])
   },
   mounted () {
     this.$store.dispatch('todos/getTodos')
   }
 }
 </script>
+
+<style scoped>
+.card-body {
+  padding: 0;
+}
+</style>

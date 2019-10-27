@@ -4,8 +4,12 @@ const state = {
 }
 
 const getters = {
-  pendingTodos (state) {
-
+  doing(state) {
+    console.log('hello')
+    return state.all.filter(t => !t.status)
+  },
+  completed(state) {
+    return state.all.filter(t => t.status)
   }
 }
 
@@ -92,5 +96,6 @@ export default {
   namespaced: true,
   state,
   mutations,
+  getters,
   actions
 }
