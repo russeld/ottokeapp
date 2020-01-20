@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 
 
 use App\Todo;
+use App\Catalog;
+use App\Client;
 
 class TodoController extends Controller
 {
@@ -14,12 +16,18 @@ class TodoController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index($uuid, $sheetId)
     {
-        return Todo::orderBy('status')
-            ->orderBy('updated_at', 'desc')
-            ->orderBy('created_at', 'desc')
+        $todos = Client::where('uuid', $uuid)
+            ->firstOrFail()
+            ->sheets()
+            ->where('id', $sheetId)
+            ->firstOrFail()
+            ->todos()
+            ->orderBy('id', 'desc')
             ->get();
+
+        return $todos;
     }
 
     /**
@@ -28,10 +36,17 @@ class TodoController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $request, $uuid, $sheetId)
     {
+        $sheet = Client::where('uuid', $uuid)
+            ->firstOrFail()
+            ->sheets()
+            ->where('id', $sheetId)
+            ->firstOrFail();
+
         $todo = new Todo;
 
+        $todo->sheet()->associate($sheet);
         $todo->title = $request->title;
         $todo->status = Todo::PENDING;
 
@@ -43,38 +58,42 @@ class TodoController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  int  $todoId
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($uuid, $sheetId, $todoId)
     {
-        $todo = Todo::find($id);
+        $todo = Client::where('uuid', $uuid)
+            ->firstOrFail()
+            ->sheets()
+            ->where('id', $sheetId)
+            ->firstOrFail()
+            ->todos()
+            ->where('id', $todoId)
+            ->firstOrFail();
 
         return $todo;
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  int  $todoId
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $uuid, $sheetId, $todoId)
     {
-        $todo = Todo::findOrFail($id);
-        $todo->status = Todo::DONE;
+        $todo = Client::where('uuid', $uuid)
+            ->firstOrFail()
+            ->sheets()
+            ->where('id', $sheetId)
+            ->firstOrFail()
+            ->todos()
+            ->where('id', $todoId)
+            ->firstOrFail();
+
+        $todo->status = $request->status;
         $todo->save();
 
         return $todo;
@@ -83,12 +102,19 @@ class TodoController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  int  $todoId
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($uuid, $sheetId, $todoId)
     {
-        $todo = Todo::findOrFail($id);
+        $todo = Client::where('uuid', $uuid)
+            ->firstOrFail()
+            ->sheets()
+            ->where('id', $sheetId)
+            ->firstOrFail()
+            ->todos()
+            ->where('id', $todoId)
+            ->firstOrFail();
 
         $todo->delete();
     }
