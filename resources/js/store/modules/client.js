@@ -16,7 +16,8 @@ const mutations = {
 
 const actions = {
   getClientId ({commit}) {
-    const uuid = localStorage.getItem('uuid')
+    var uuid = localStorage.getItem('uuid')
+
     if (!uuid) {
       uuid = generateId()
       axios
