@@ -82,7 +82,9 @@ export default {
     }
   },
   mounted () {
-    this.getSheets(this.uuid)
+    if (this.uuid) {
+      this.getSheets(this.uuid)
+    }
   }
 };
 </script>
