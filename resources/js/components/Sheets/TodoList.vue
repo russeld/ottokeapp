@@ -1,8 +1,10 @@
 <template>
   <div class="container">
     <div class="row">
-      <div class="col-sm-12">
-        <h2 class="mt-2">{{ sheet.name }}</h2>
+      <div class="col-sm-12 text-center">
+        <h2 class="mb-0 mt-2">{{ sheet.name }}</h2>
+        <p class="mb-0"><small>{{ displayCreated(sheet.created_at) }}</small></p>
+        <hr />
       </div>
     </div>
     <div class="row">
@@ -12,7 +14,7 @@
               :state="titleState"
               label-for="title-input"
               invalid-feedback="Title is required">
-          <b-form-input id="title-input" v-model="title" :state="titleState" class="mt-2 mb-4" placeholder="Enter new todo" required></b-form-input>
+          <b-form-input id="title-input" v-model="title" :state="titleState" class="mt-2 mb-4" placeholder="What do you need to do?" required></b-form-input>
           </b-form-group>
         </form>
       </div>
@@ -22,7 +24,7 @@
         <b-list-group>
           <TodoItem v-for="todo in todos" :key="todo.id" :todo="todo" :sheetId="sheetId" />
         </b-list-group>
-        <p v-if="todos.length == 0" class="font-weight-light text-center">Start adding a todo</p>
+        <p v-if="todos.length == 0" class="font-weight-light text-center">You got this!</p>
       </div>
     </div>
   </div>
@@ -60,6 +62,9 @@ export default {
     }),
     toAgo(date) {
       return moment(date).fromNow()
+    },
+    displayCreated(date) {
+      return moment.utc(date).format('MMM d, Y')
     },
     checkFormValidity() {
       const valid = this.$refs.form.checkValidity();
