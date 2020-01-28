@@ -14,12 +14,12 @@ import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 
 import { library } from '@fortawesome/fontawesome-svg-core'
-import { faTrash, faCheck } from '@fortawesome/free-solid-svg-icons'
+import { faTrash, faCheck, faCog } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
 import store from './store';
 
-library.add(faTrash, faCheck)
+library.add(faTrash, faCheck, faCog)
 
 Vue.component('font-awesome-icon', FontAwesomeIcon)
 Vue.use(BootstrapVue)

@@ -2,11 +2,6 @@
   <div class="container">
     <div class="row">
       <div class="col my-2 text-right">
-        <b-button variant="outline-secondary" v-b-modal.modal-1>
-          New sheet
-          <font-awesome-icon icon="plus-circle" size="lg" />
-        </b-button>
-
         <b-modal ref="modal" id="modal-1" title="New Sheet" @show="resetForm" @hidden="resetForm" @ok="handleOk">
           <form ref="form" @submit.stop.prevent="handleSubmit">
             <b-form-group
@@ -21,6 +16,15 @@
     </div>
     <div class="row" v-if="sheets.length">
       <SheetCard v-for="sheet in sheets" :key="sheet.id" :sheet="sheet"/>
+      <div class="col-lg-3 col-md-6">
+        <b-card
+          border-variant="dark"
+          class="mb-2 sheet-container"
+          body-class="text-center d-flex justify-content-center align-items-center"
+          v-b-modal.modal-1>
+          <b-card-text class="mb-1">New sheet <font-awesome-icon icon="plus-circle" size="lg" /></b-card-text>
+        </b-card>
+      </div>
     </div>
     <div class="row" v-else>
       <div class="container">
@@ -88,3 +92,10 @@ export default {
   }
 };
 </script>
+
+<style>
+.sheet-container {
+  min-height: 125px;
+  cursor: pointer;
+}
+</style>
