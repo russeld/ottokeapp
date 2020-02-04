@@ -82,7 +82,8 @@ export default {
       this.titleState = null
     }
   },
-  created() {
+  mounted() {
+    console.log(this.uuid, this.sheetId)
     this.setSheet({ uuid: this.uuid, sheetId: this.sheetId })
     this.getTodos({ uuid: this.uuid, sheetId: this.sheetId })
   }

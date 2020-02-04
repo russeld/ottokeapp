@@ -14,6 +14,10 @@ const mutations = {
   },
   setSheet(state, sheet) {
     state.sheet = { ...sheet }
+  },
+  deleteSheet(state, sheetId) {
+    var sheets = state.sheets.filter(s => s.id != sheetId);
+    state.sheets = [ ...sheets ]
   }
 }
 
@@ -35,12 +39,21 @@ const actions = {
          })
          .catch(err => console.log(err))
   },
-  setSheet({ commit }, payload, rootState) {
+  setSheet({ commit }, payload) {
     var { sheetId, uuid } = payload
 
     axios.get(`/api/clients/${uuid}/sheets/${sheetId}`)
          .then(response => {
             commit('setSheet', response.data)
+         })
+         .catch(err => console.log(err))
+  },
+  deleteSheet({ commit }, payload) {
+    var { sheetId, uuid } = payload
+
+    axios.delete(`/api/clients/${uuid}/sheets/${sheetId}`)
+         .then(response => {
+            commit('deleteSheet', sheetId)
          })
          .catch(err => console.log(err))
   }
