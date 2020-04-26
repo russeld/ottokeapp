@@ -1,20 +1,13 @@
-/* eslint-env node */
-
-/*
- * This file runs in a Node context (it's NOT transpiled by Babel), so use only
- * the ES6 features that are supported by your Node version. https://node.green/
- */
-
 // Configuration for your app
 // https://quasar.dev/quasar-cli/quasar-conf-js
+let path = require('path')
 
-module.exports = function (/* ctx */) {
+module.exports = function (ctx) {
   return {
     // app boot file (/src/boot)
     // --> boot files are part of "main.js"
     // https://quasar.dev/quasar-cli/cli-documentation/boot-files
     boot: [
-
       'i18n',
       'axios'
     ],
@@ -53,17 +46,20 @@ module.exports = function (/* ctx */) {
       all: 'auto',
 
       components: [],
-      directives: [],
+
+      directives: [
+        'Ripple'
+      ],
 
       // Quasar plugins
-      plugins: []
+      plugins: [
+        'Notify',
+        'LocalStorage'
+      ]
     },
 
     // https://quasar.dev/quasar-cli/cli-documentation/supporting-ie
-    supportIE: false,
-
-    // https://quasar.dev/quasar-cli/cli-documentation/supporting-ts
-    supportTS: false,
+    supportIE: true,
 
     // Full list of options: https://quasar.dev/quasar-cli/quasar-conf-js#Property%3A-build
     build: {
@@ -89,6 +85,10 @@ module.exports = function (/* ctx */) {
             formatter: require('eslint').CLIEngine.getFormatter('stylish')
           }
         })
+        cfg.resolve.alias = {
+          ...cfg.resolve.alias,
+          '@': path.resolve(__dirname, './src/')
+        }
       }
     },
 
@@ -105,7 +105,7 @@ module.exports = function (/* ctx */) {
 
     // https://quasar.dev/quasar-cli/developing-ssr/configuring-ssr
     ssr: {
-      pwa: false
+      pwa: true
     },
 
     // https://quasar.dev/quasar-cli/developing-pwa/configuring-pwa
@@ -113,15 +113,12 @@ module.exports = function (/* ctx */) {
       workboxPluginMode: 'GenerateSW', // 'GenerateSW' or 'InjectManifest'
       workboxOptions: {}, // only for GenerateSW
       manifest: {
-        name: 'Ottoke',
-
-        short_name: 'Ottoke',
-        description: 'Simple Todo Application',
+        name: 'Itinerary Sharing App',
+        short_name: 'Itinerary Sharing App',
+        description: 'Trip itinerary sharing website',
         display: 'standalone',
         orientation: 'portrait',
-
         background_color: '#ffffff',
-
         theme_color: '#027be3',
         icons: [
           {
@@ -190,7 +187,7 @@ module.exports = function (/* ctx */) {
       // More info: https://quasar.dev/quasar-cli/developing-electron-apps/node-integration
       nodeIntegration: true,
 
-      extendWebpack (/* cfg */) {
+      extendWebpack (cfg) {
         // do something with Electron main process Webpack cfg
         // chainWebpack also available besides this extendWebpack
       }

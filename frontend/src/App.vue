@@ -5,7 +5,19 @@
 </template>
 
 <script >
+import { mapActions } from 'vuex'
+
 export default {
-  name: 'App'
+  name: 'App',
+
+  methods: {
+    ...mapActions({
+      checkUuid: 'client/checkClientUuid'
+    })
+  },
+
+  mounted () {
+    this.checkUuid()
+  }
 }
 </script>

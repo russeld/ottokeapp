@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Todo extends Model
 {
+    protected $fillable = ['description', 'status'];
+
     protected $hidden = ['sheet'];
 
     const PENDING = 0;

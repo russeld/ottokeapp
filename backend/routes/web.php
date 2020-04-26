@@ -17,24 +17,24 @@ $router->get('/', function () use ($router) {
     return $router->app->version();
 });
 
-$router->prefix('clients')->group(function() {
-    $router->get('/', 'ClientController@index')->name('client-api-index');
-    $router->post('/', 'ClientController@store')->name('client-api-store');
+$router->group(['prefix' => 'clients'], function() use ($router) {
+    $router->get('/', ['uses' => 'ClientController@index']);
+    $router->post('/',['uses' => 'ClientController@store']);
 
-    $router->prefix('{uuid}/sheets')->group(function() {
-        $router->get('/', 'SheetController@index')->name('sheet-api-list');
-        $router->get('/{sheetId}', 'SheetController@show')->name('sheet-api-show');
-        $router->post('/', 'SheetController@store')->name('sheet-api-store');
-        $router->put('/{sheetId}', 'SheetController@update')->name('sheet-api-update');
-        $router->delete('/{sheetId}', 'SheetController@delete')->name('sheet-api-delete');
+    $router->group(['prefix' => '{uuid}/sheets'], function() use ($router) {
+        $router->get('/', ['uses' => 'SheetController@index']);
+        $router->get('/{sheetId}', ['uses' => 'SheetController@show']);
+        $router->post('/', ['uses' => 'SheetController@store']);
+        $router->put('/{sheetId}', ['uses' => 'SheetController@update']);
+        $router->delete('/{sheetId}', ['uses' => 'SheetController@delete']);
     });
 
-    $router->prefix('{uuid}/sheets/{sheetId}/todos')->group(function() {
-        $router->get('/', 'TodoController@index')->name('todo-api-index');
-        $router->post('/', 'TodoController@store')->name('todo-api-store');
-        $router->get('/{todoId}', 'TodoController@show')->name('todo-api-show');
-        $router->put('/{todoId}', 'TodoController@update')->name('todo-api-update');
-        $router->delete('/{todoId}', 'TodoController@destroy')->name('todo-api-delete');
+    $router->group(['prefix' => '{uuid}/sheets/{sheetId}/todos'], function() use ($router) {
+        $router->get('/', ['uses' => 'TodoController@index']);
+        $router->post('/', ['uses' => 'TodoController@store']);
+        $router->get('/{todoId}', ['uses' => 'TodoController@show']);
+        $router->put('/{todoId}', ['uses' => 'TodoController@update']);
+        $router->delete('/{todoId}', ['uses' => 'TodoController@destroy']);
     });
 });
 

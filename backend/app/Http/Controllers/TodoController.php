@@ -93,7 +93,7 @@ class TodoController extends Controller
             ->where('id', $todoId)
             ->firstOrFail();
 
-        $todo->status = $request->status;
+        $todo->fill($request->all());
         $todo->save();
 
         return $todo;
