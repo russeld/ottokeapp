@@ -4,6 +4,7 @@ export default function () {
     sheets: [],
     todos: [],
     sheet: null,
-    showRightDrawer: false
+    todo: null,
+    showRightDrawer: true
   }
 }

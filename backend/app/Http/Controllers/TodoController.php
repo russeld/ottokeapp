@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-
+use Carbon\Carbon;
 
 use App\Todo;
 use App\Catalog;
@@ -94,6 +94,12 @@ class TodoController extends Controller
             ->firstOrFail();
 
         $todo->fill($request->all());
+
+        if ($todo->status == Todo::DONE)
+        {
+            $todo->completed_at = Carbon::now();
+        }
+
         $todo->save();
 
         return $todo;
