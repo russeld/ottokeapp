@@ -2,16 +2,26 @@
 const routes = [
   {
     path: '/',
-    component: () => import('layouts/MainLayout.vue'),
+    component: () => import('layouts/SheetLayout.vue'),
     children: [
       {
         path: '',
-        component: () => import('pages/SheetIndex.vue')
+        component: () => import('pages/SheetPage.vue')
       },
       {
         path: '/sheets/:id/tasks',
-        name: 'sheet-index',
-        component: () => import('pages/SheetIndex.vue')
+        name: 'sheet-page',
+        component: () => import('pages/SheetPage.vue')
+      },
+      {
+        path: '/tasks',
+        name: 'task-page',
+        component: () => import('pages/TaskPage.vue')
+      },
+      {
+        path: '/myday',
+        name: 'myday-page',
+        component: () => import('pages/MyDayPage.vue')
       }
     ]
   }

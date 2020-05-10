@@ -1,5 +1,5 @@
 <template>
-  <q-input outlined square placeholder="Add a task" v-model.trim="text" @keypress.enter="onSubmit">
+  <q-input outlined square placeholder="Add a task" v-bind:value="text" @keypress.enter="$emit('submit', $event.target.value)">
     <template v-slot:prepend>
       <q-icon name="add" />
     </template>
@@ -12,25 +12,24 @@ import { mapActions } from 'vuex'
 export default {
   name: 'todo-input',
 
+  props: {
+    text: {
+      type: String
+    }
+  },
+
   data () {
     return {
-      text: null
+
     }
   },
 
   methods: {
     ...mapActions({
       getSheet: 'client/getSheet',
-      createTodo: 'client/createTodo'
-    }),
-    onSubmit () {
-      if (!this.text) {
-        return
-      }
-
-      this.createTodo(this.text)
-        .then(response => { this.text = '' })
-    }
+      createTodo: 'client/createTodo',
+      getSheets: 'client/getSheets'
+    })
   }
 }
 </script>

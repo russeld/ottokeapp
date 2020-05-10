@@ -20,6 +20,12 @@ $router->get('/', function () use ($router) {
 $router->group(['prefix' => 'clients'], function() use ($router) {
     $router->get('/', ['uses' => 'ClientController@index']);
     $router->post('/',['uses' => 'ClientController@store']);
+    $router->get('/{uuid}/day', ['uses' => 'TodoController@getMyDay']);
+    $router->post('/{uuid}/day', ['uses' => 'TodoController@createTodoMyDay']);
+    $router->put('/{uuid}/day/{todoId}', ['uses' => 'TodoController@addToMyDay']);
+    $router->delete('/{uuid}/day/{todoId}', ['uses' => 'TodoController@removeFromMyDay']);
+    $router->post('/{uuid}/todos', ['uses' => 'TodoController@storeWithoutSheet']);
+    $router->get('/{uuid}/todos', ['uses' => 'TodoController@getWithoutSheet']);
 
     $router->group(['prefix' => '{uuid}/sheets'], function() use ($router) {
         $router->get('/', ['uses' => 'SheetController@index']);

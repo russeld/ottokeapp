@@ -15,8 +15,23 @@
             <q-icon flat name="menu"/>
           </q-item-section>
         </q-item>
+
+        <q-item clickable :to="{ name: 'myday-page' }">
+          <q-item-section class="text-capitalize">My Day</q-item-section>
+          <q-item-section avatar>
+            <q-icon flat name="wb_sunny"/>
+          </q-item-section>
+        </q-item>
+
+        <q-item clickable :to="{ name: 'task-page' }">
+          <q-item-section class="text-capitalize">Tasks</q-item-section>
+          <q-item-section avatar>
+            <q-icon flat name="list"/>
+          </q-item-section>
+        </q-item>
+
         <q-item
-          :to="{ name: 'sheet-index', params: { id: sheet.id } }"
+          :to="{ name: 'sheet-page', params: { id: sheet.id } }"
           active-class="bg-blue-2 text-blue-7"
           v-for="sheet in sheets"
           :key="sheet.id"
@@ -26,10 +41,10 @@
             {{ sheet.name }}
           </q-item-section>
           <q-item-section avatar>
-            <div class="flex inline flex-center" v-if="!isOpen">
+            <div v-if="!isOpen">
               {{ sheet.ongoing ? sheet.ongoing : '' }}
             </div>
-            <div class="flex inline flex-cener text-capitalize" v-else>
+            <div class="text-capitalize" v-else>
               {{ sheet.name.substring(0, 2) }}
             </div>
           </q-item-section>

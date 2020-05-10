@@ -8,12 +8,10 @@ use App\Todo;
 
 class Sheet extends Model
 {
-    protected $fillable = ['name'];
+    protected $fillable = ['name', 'hide_completed'];
 
     protected $appends = [
-        'ongoing',
-        'completed',
-        'recent'
+        'ongoing'
     ];
 
     protected $hidden = [
@@ -27,21 +25,17 @@ class Sheet extends Model
 
     public function todos()
     {
-        return $this->hasMany('App\Todo');
+        $todo = $this->hasMany('App\Todo');
+
+        if ($this->attributes['hide_completed']) {
+            return $todo->where('status', Todo::PENDING);
+        }
+
+        return $todo;
     }
 
     public function getOngoingAttribute()
     {
         return $this->todos()->where('status', Todo::PENDING)->count();
-    }
-
-    public function getCompletedAttribute()
-    {
-        return $this->todos()->where('status', Todo::DONE)->count();
-    }
-
-    public function getRecentAttribute()
-    {
-        return $this->todos()->select('title')->first();
     }
 }

@@ -22,6 +22,7 @@ class SheetController extends Controller
 
         $sheet = new Sheet();
         $sheet->name = $request->name;
+        $sheet->hide_completed = false;
         $sheet->client()->associate($client);
         $sheet->save();
 
@@ -36,7 +37,7 @@ class SheetController extends Controller
             ->where('id', $sheetId)
             ->firstOrFail();
 
-        $sheet->name = $request->name;
+        $sheet->fill($request->all());
         $sheet->save();
 
         return $sheet;

@@ -7,7 +7,7 @@ export function setActiveSheetId (state, sheetId) {
 }
 
 export function setSheets (state, sheets) {
-  state.sheets = sheets
+  state.sheets = [...sheets]
 }
 
 export function setSheet (state, sheet) {
@@ -18,8 +18,17 @@ export function addSheet (state, sheet) {
   state.sheets = [...state.sheets, sheet]
 }
 
-export function removeSheet (state, sheet) {
+export function updateSheet (state, sheet) {
+  const sindex = state.sheets.findIndex(s => s.id === sheet.id)
+  state.sheets.splice(sindex, 1, { ...sheet })
+  state.sheet = { ...sheet }
+}
 
+export function removeSheet (state, sheet) {
+  const sindex = state.sheets.findIndex(s => s.id === sheet.id)
+  state.sheets.splice(sindex, 1)
+  state.sheet = null
+  state.todos = []
 }
 
 export function setTodo (state, todo) {
@@ -37,11 +46,6 @@ export function setTodos (state, todos) {
 export function deleteTodo (state, todo) {
   const tindex = state.todos.findIndex(t => t.id === todo.id)
   state.todos.splice(tindex, 1)
-
-  const sindex = state.sheets.findIndex(s => s.id === state.sheet.id)
-  state.sheet.ongoing += -1
-
-  state.sheets.splice(sindex, 1, { ...state.sheet })
 
   state.todo = null
 }

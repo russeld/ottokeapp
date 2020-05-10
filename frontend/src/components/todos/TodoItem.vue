@@ -6,9 +6,12 @@
     <q-item-section>
       <q-item-label :class="{ 'text-strike': todo.status === 1 }">{{ todo.title }}</q-item-label>
       <q-item-label caption v-if="showDueDate">
-        <span v-if="todo.due_date" :class="{'text-primary': (!todo.is_overdue && todo.status !== 1), 'text-warning': todo.is_overdue}" class="flex align-center q-gutter-x-sm">
+        <span v-if="todo.due_date" :class="{'text-primary': (!todo.is_overdue && todo.status !== 1), 'text-warning': (todo.is_overdue && todo.status !== 1)}" class="flex align-center q-gutter-x-sm">
           <q-icon name="calendar_today" />
           <span>Due on {{ formatDueDate() }}</span>
+        </span>
+        <span v-if="todo.is_myday" class="text-green-5">
+          <q-icon flat name="wb_sunny"/> My Day
         </span>
       </q-item-label>
     </q-item-section>

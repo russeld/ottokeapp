@@ -11,63 +11,87 @@ use App\Client;
 
 class TodoController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index($uuid, $sheetId)
+    public function index(Request $request, $uuid, $sheetId)
     {
-        $todos = Client::where('uuid', $uuid)
+        $query = Client::where('uuid', $uuid)
             ->firstOrFail()
             ->sheets()
             ->where('id', $sheetId)
             ->firstOrFail()
-            ->todos()
-            ->orderBy('id', 'desc')
-            ->get();
+            ->todos();
+
+        $search = $request->get('search');
+        if ($search) {
+            $query->where('title', 'like', '%' . $request->get('search') . '%');
+        }
+
+        $todos = $query->orderBy('id', 'desc')->get();
 
         return $todos;
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request, $uuid, $sheetId)
     {
-        $sheet = Client::where('uuid', $uuid)
-            ->firstOrFail()
-            ->sheets()
+        $todo = new Todo;
+
+        $client = Client::where('uuid', $uuid)
+            ->firstOrFail();
+
+        $sheet = $client->sheets()
             ->where('id', $sheetId)
             ->firstOrFail();
 
-        $todo = new Todo;
-
         $todo->sheet()->associate($sheet);
+
         $todo->title = $request->title;
         $todo->status = Todo::PENDING;
+        $todo->client_id = $client->id;
 
         $todo->save();
 
         return $todo;
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $todoId
-     * @return \Illuminate\Http\Response
-     */
+    public function storeWithoutSheet(Request $request, $uuid)
+    {
+        $client = Client::where('uuid', $uuid)
+            ->firstOrFail();
+
+        $todo = new Todo;
+        $todo->title = $request->title;
+        $todo->status = Todo::PENDING;
+        $todo->client_id = $client->id;
+
+        $todo->save();
+
+        return $todo;
+    }
+
+    public function getWithoutSheet(Request $request, $uuid)
+    {
+        $query = Todo::where('uuid', $uuid);
+
+        $search = $request->get('search');
+
+        if ($search) {
+            $query->where('title', 'like', '%' . $request->get('search') . '%');
+        }
+
+        $todos = $query->orderBy('id', 'desc')->get();
+
+        return $todos;
+    }
+
     public function show($uuid, $sheetId, $todoId)
     {
-        $todo = Client::where('uuid', $uuid)
-            ->firstOrFail()
-            ->sheets()
+        $client = Client::where('uuid', $uuid)
+            ->firstOrFail();
+
+        $sheet = $client->sheets()
             ->where('id', $sheetId)
-            ->firstOrFail()
+            ->firstOrFail();
+
+        $todo = $sheet
             ->todos()
             ->where('id', $todoId)
             ->firstOrFail();
@@ -75,20 +99,16 @@ class TodoController extends Controller
         return $todo;
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $todoId
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request, $uuid, $sheetId, $todoId)
     {
-        $todo = Client::where('uuid', $uuid)
-            ->firstOrFail()
-            ->sheets()
+        $client = Client::where('uuid', $uuid)
+            ->firstOrFail();
+
+        $sheet = $client->sheets()
             ->where('id', $sheetId)
-            ->firstOrFail()
+            ->firstOrFail();
+
+        $todo = $sheet
             ->todos()
             ->where('id', $todoId)
             ->firstOrFail();
@@ -105,23 +125,88 @@ class TodoController extends Controller
         return $todo;
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $todoId
-     * @return \Illuminate\Http\Response
-     */
     public function destroy($uuid, $sheetId, $todoId)
     {
-        $todo = Client::where('uuid', $uuid)
-            ->firstOrFail()
-            ->sheets()
+        $client = Client::where('uuid', $uuid)
+            ->firstOrFail();
+
+        $sheet = $client->sheets()
             ->where('id', $sheetId)
-            ->firstOrFail()
+            ->firstOrFail();
+
+        $todo = $sheet
             ->todos()
             ->where('id', $todoId)
             ->firstOrFail();
 
         $todo->delete();
+    }
+
+    public function addToMyDay($uuid, $todoId)
+    {
+        $client = Client::where('uuid', $uuid)
+            ->firstOrFail();
+
+        $todo = Todo::where('client_id', $client->id)
+            ->where('id', $todoId)
+            ->firstOrFail();
+
+        $todo->my_day = Carbon::now();
+
+        $todo->save();
+
+        return $todo;
+    }
+
+    public function getMyDay(Request $request, $uuid)
+    {
+        $client = Client::where('uuid', $uuid)
+            ->firstOrFail();
+
+        $query = Todo::where('client_id', $client->id)
+            ->whereNotNull('my_day')
+            ->whereDate('my_day', Carbon::now());
+
+        $search = $request->get('search');
+
+        if ($search) {
+            $query->where('title', 'like', '%' . $request->get('search') . '%');
+        }
+
+        $todos = $query->orderBy('id', 'desc')->get();
+
+        return $todos;
+    }
+
+    public function createTodoMyDay(Request $request, $uuid)
+    {
+        $client = Client::where('uuid', $uuid)
+            ->firstOrFail();
+
+        $todo = new Todo;
+        $todo->sheet_id = null;
+        $todo->my_day = Carbon::now();
+        $todo->title = $request->title;
+        $todo->status = Todo::PENDING;
+        $todo->client_id = $client->id;
+        $todo->save();
+
+        return $todo;
+    }
+
+    public function removeFromMyDay($uuid, $todoId)
+    {
+        $client = Client::where('uuid', $uuid)
+            ->firstOrFail();
+
+        $todo = Todo::where('client_id', $client->id)
+            ->where('id', $todoId)
+            ->firstOrFail();
+
+        $todo->my_day = null;
+
+        $todo->save();
+
+        return $todo;
     }
 }
