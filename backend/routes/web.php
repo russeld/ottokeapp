@@ -26,6 +26,8 @@ $router->group(['prefix' => 'clients'], function() use ($router) {
     $router->delete('/{uuid}/day/{todoId}', ['uses' => 'TodoController@removeFromMyDay']);
     $router->post('/{uuid}/todos', ['uses' => 'TodoController@storeWithoutSheet']);
     $router->get('/{uuid}/todos', ['uses' => 'TodoController@getWithoutSheet']);
+    $router->delete('/{uuid}/todos/{todoId}', ['uses' => 'TodoController@destroy']);
+    $router->put('{uuid}/todos/{todoId}', ['uses' => 'TodoController@update']);
 
     $router->group(['prefix' => '{uuid}/sheets'], function() use ($router) {
         $router->get('/', ['uses' => 'SheetController@index']);
@@ -39,8 +41,6 @@ $router->group(['prefix' => 'clients'], function() use ($router) {
         $router->get('/', ['uses' => 'TodoController@index']);
         $router->post('/', ['uses' => 'TodoController@store']);
         $router->get('/{todoId}', ['uses' => 'TodoController@show']);
-        $router->put('/{todoId}', ['uses' => 'TodoController@update']);
-        $router->delete('/{todoId}', ['uses' => 'TodoController@destroy']);
     });
 });
 

@@ -172,7 +172,7 @@ export default {
     onClickAddToMyDay () {
       this.addToMyDay(this.todo.id)
         .then(() => {
-          if (this.$route.name = 'myday-page') {
+          if (this.$route.name === 'myday-page') {
             this.getMyDay()
           }
         })
@@ -180,7 +180,7 @@ export default {
     clickRemoveFromMyDay () {
       this.removeFromMyDay(this.todo.id)
         .then(() => {
-          if (this.$route.name = 'myday-page') {
+          if (this.$route.name === 'myday-page') {
             this.getMyDay()
           }
         })

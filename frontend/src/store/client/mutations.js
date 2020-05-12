@@ -52,16 +52,6 @@ export function deleteTodo (state, todo) {
 
 export function updateTodo (state, todo) {
   const tindex = state.todos.findIndex(t => t.id === todo.id)
-  const oldTodo = state.todos[tindex]
   state.todos.splice(tindex, 1, { ...todo })
-
-  const sindex = state.sheets.findIndex(s => s.id === state.sheet.id)
-
-  if (oldTodo.status !== todo.status) {
-    state.sheet.ongoing += todo.status === 0 ? 1 : -1
-  }
-
-  state.sheets.splice(sindex, 1, { ...state.sheet })
-
   state.todo = todo
 }

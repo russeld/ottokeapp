@@ -69,7 +69,11 @@ class TodoController extends Controller
 
     public function getWithoutSheet(Request $request, $uuid)
     {
-        $query = Todo::where('uuid', $uuid);
+        $client = Client::where('uuid', $uuid)
+            ->firstOrFail();
+
+        $query = Todo::where('client_id', $client->id)
+            ->whereNull('sheet_id');
 
         $search = $request->get('search');
 
@@ -99,18 +103,15 @@ class TodoController extends Controller
         return $todo;
     }
 
-    public function update(Request $request, $uuid, $sheetId, $todoId)
+    public function update(Request $request, $uuid, $todoId)
     {
         $client = Client::where('uuid', $uuid)
             ->firstOrFail();
 
-        $sheet = $client->sheets()
-            ->where('id', $sheetId)
-            ->firstOrFail();
+        $query = Todo::where('client_id', $client->id);
 
-        $todo = $sheet
-            ->todos()
-            ->where('id', $todoId)
+        $todo = $query
+            ->where('client_id', $client->id)
             ->firstOrFail();
 
         $todo->fill($request->all());
@@ -125,18 +126,15 @@ class TodoController extends Controller
         return $todo;
     }
 
-    public function destroy($uuid, $sheetId, $todoId)
+    public function destroy($uuid, $todoId)
     {
         $client = Client::where('uuid', $uuid)
             ->firstOrFail();
 
-        $sheet = $client->sheets()
-            ->where('id', $sheetId)
-            ->firstOrFail();
+        $query = Todo::where('client_id', $client->id);
 
-        $todo = $sheet
-            ->todos()
-            ->where('id', $todoId)
+        $todo = $query
+            ->where('client_id', $client->id)
             ->firstOrFail();
 
         $todo->delete();

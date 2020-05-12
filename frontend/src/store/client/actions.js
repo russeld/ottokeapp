@@ -57,6 +57,21 @@ export async function getTodos ({ commit, state }, query) {
   commit('setTodos', response.data)
 }
 
+export async function createTask ({ commit, state }, text) {
+  const data = {
+    title: text
+  }
+  const response = await axios.post(`clients/${state.uuid}/todos`, data)
+  commit('addTodo', response.data)
+  return response
+}
+
+export async function getTasks ({ commit, state }, text) {
+  const response = await axios.get(`clients/${state.uuid}/todos`)
+  commit('setTodos', response.data)
+  return response
+}
+
 export async function createTodo ({ commit, state }, text) {
   const data = {
     title: text
@@ -93,11 +108,11 @@ export async function removeFromMyDay ({ commit, state }, todoId) {
 }
 
 export async function deleteTodo ({ commit, state }, todo) {
-  await axios.delete(`clients/${state.uuid}/sheets/${state.sheet.id}/todos/${todo.id}`, todo)
+  await axios.delete(`clients/${state.uuid}/todos/${todo.id}`)
   commit('deleteTodo', todo)
 }
 
 export async function updateTodo ({ commit, state }, todo) {
-  const response = await axios.put(`clients/${state.uuid}/sheets/${state.sheet.id}/todos/${todo.id}`, todo)
+  const response = await axios.put(`clients/${state.uuid}/todos/${todo.id}`, todo)
   commit('updateTodo', response.data)
 }
