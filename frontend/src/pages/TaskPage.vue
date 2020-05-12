@@ -5,7 +5,7 @@
         <p class="text-h5 q-ma-none text-blue-7">Tasks</p>
       </div>
 
-      <todo-input :text="text" v-on:submit="onSubmit"/>
+      <todo-input :text="text" v-on:submit="onSubmit" v-on:input="onInput"/>
 
       <q-list separator bordered v-if="hasTodos">
         <todo-item v-for="todo in todos" :key="todo.id" :todo="todo" />
@@ -57,8 +57,11 @@ export default {
       }
 
       this.createTask(text)
-        .then(response => { text = '' })
+        .then(response => { this.text = '' })
         .then(() => this.getTasks())
+    },
+    onInput (text) {
+      this.text = text
     }
   },
 

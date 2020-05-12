@@ -108,9 +108,7 @@ class TodoController extends Controller
         $client = Client::where('uuid', $uuid)
             ->firstOrFail();
 
-        $query = Todo::where('client_id', $client->id);
-
-        $todo = $query
+        $todo = Todo::where('id', $todoId)
             ->where('client_id', $client->id)
             ->firstOrFail();
 
@@ -131,9 +129,7 @@ class TodoController extends Controller
         $client = Client::where('uuid', $uuid)
             ->firstOrFail();
 
-        $query = Todo::where('client_id', $client->id);
-
-        $todo = $query
+        $todo = Todo::where('id', $todoId)
             ->where('client_id', $client->id)
             ->firstOrFail();
 

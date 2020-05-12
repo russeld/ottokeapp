@@ -1,5 +1,11 @@
 <template>
-  <q-input outlined square placeholder="Add a task" v-bind:value="text" @keypress.enter="$emit('submit', $event.target.value)">
+  <q-input
+    outlined
+    square
+    placeholder="Add a task"
+    :value="text"
+    @input="$emit('input', $event)"
+    @keypress.enter="$emit('submit', $event.target.value)">
     <template v-slot:prepend>
       <q-icon name="add" />
     </template>

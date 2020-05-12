@@ -26,7 +26,7 @@
         </div>
       </div>
 
-      <todo-input v-on:submit="onSubmit"/>
+      <todo-input :text="todo" v-on:submit="onSubmit" v-on:input="onInput" />
 
       <q-list separator bordered v-if="hasTodos">
         <todo-item v-for="todo in todos" :key="todo.id" :todo="todo" />
@@ -46,6 +46,7 @@ export default {
   data () {
     return {
       text: null,
+      todo: 'ftest',
       borderless: true,
       query: {
         search: ''
@@ -137,8 +138,11 @@ export default {
       }
 
       this.createTodo(text)
-        .then(response => { text = '' })
+        .then(response => { this.todo = '' })
         .then(() => this.getSheets())
+    },
+    onInput (text) {
+      this.todo = text
     }
   },
 

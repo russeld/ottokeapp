@@ -91,7 +91,7 @@ export async function createMyDay ({ commit, state }, text) {
     title: text
   }
   const response = await axios.post(`clients/${state.uuid}/day`, data)
-  commit('updateTodo', response.data)
+  commit('addTodo', response.data)
   return response
 }
 
